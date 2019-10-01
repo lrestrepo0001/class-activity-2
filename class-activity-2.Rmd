@@ -81,12 +81,21 @@ pairs(D5)
 #round rounds numbers to whole number values
 #sample draws a random samples from the groups vector according to a uniform distribution
 
+student_score <- round(pmin(pmax(rnorm(100, 75, 20),0),100))
+
+student_int <- sample(c("Sport", "Music", "Nature", "Literature"),100, replace=TRUE)
+
+student_df<-data.frame(student_int,student_score, as.is=TRUE)
+student_df %>%
+  mutate(scores=as.numeric(student_score))
+class(student_df$student_score)
 
 ```
 
 2. Using base R commands, draw a histogram of the scores. Change the breaks in your histogram until you think they best represent your data.
 
 ```{r}
+hist(as.numeric(student_df$student_score), breaks = 3)
 
 ```
 
@@ -95,6 +104,8 @@ pairs(D5)
 
 ```{r}
 #cut() divides the range of scores into intervals and codes the values in scores according to which interval they fall. We use a vector called `letters` as the labels, `letters` is a vector made up of the letters of the alphabet.
+
+cut(as.numeric(student_df$student_score),breaks = c(0, 50, 60, 70, 80, 90, 100), letters[6:1])
 
 ```
 
@@ -106,8 +117,11 @@ library(RColorBrewer)
 
 #The top section of palettes are sequential, the middle section are qualitative, and the lower section are diverging.
 #Make RColorBrewer palette available to R and assign to your bins
+mypalette <- brewer.pal(4, "Greens")
 
 #Use named palette in histogram
+
+hist(as.numeric(student_df$student_score), breaks = 4, col=mypalette, xlab = "Greens Sequential")
 
 ```
 
@@ -116,6 +130,10 @@ library(RColorBrewer)
 
 ```{r}
 #Make a vector of the colors from RColorBrewer
+mypalette <- brewer.pal(4, "Reds")
+
+#Create a boxplot of total enrollment for three schools
+boxplot(student_df$student_score ~ student_int, col=mypalette)
 
 ```
 
@@ -123,13 +141,16 @@ library(RColorBrewer)
 6. Now simulate a new variable that describes the number of logins that students made to the educational game. They should vary from 1-25.
 
 ```{r}
+logins <- round(pmin(pmax(rnorm(100, 12.5, 1),0),25))
+length(logins)
+student_df$logins <- logins
 
 ```
 
 7. Plot the relationships between logins and scores. Give the plot a title and color the dots according to interest group.
 
 ```{r}
-
+plot(student_df$logins,student_df$student_score)
 
 ```
 
@@ -137,16 +158,26 @@ library(RColorBrewer)
 8. R contains several inbuilt data sets, one of these in called AirPassengers. Plot a line graph of the the airline passengers over time using this data set.
 
 ```{r}
+plot(AirPassengers)
 
 ```
 
 
-9. Using another inbuilt data set, iris, plot the relationships between all of the variables in the data set. Which of these relationships is it appropraiet to run a correlation on? 
+9. Using another inbuilt data set, iris, plot the relationships between all of the variables in the data set. Which of these relationships is it appropriate to run a correlation on? 
 
 ```{r}
+
+plot(iris$Sepal.Length,iris$Sepal.Width)
+plot(iris$Sepal.Length,iris$Petal.Length)#this one looks pretty good
+plot(iris$Sepal.Length,iris$Petal.Width)#Looks pretty good
+plot(iris$Sepal.Width,iris$Petal.Length)
+plot(iris$Sepal.Width,iris$Petal.Width)
+plot(iris$Petal.Length,iris$Petal.Width)#Looks pretty good
+
 
 ```
 
 10. Finally use the knitr function to generate an html document from your work. If you have time, try to change some of the output using different commands from the RMarkdown cheat sheet.
+
 
 11. Commit, Push and Pull Request your work back to the main branch of the repository 
